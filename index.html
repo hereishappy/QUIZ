@@ -1,821 +1,320 @@
-<!doctype html>
-<html lang="hi">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scaffolding Quiz (हिंदी) — 20 प्रश्न क्विज़</title>
-  <style>
-    :root{--bg:#f7fafc;--card:#fff;--muted:#6b7280;--accent:#0369a1;--success:#16a34a;--danger:#dc2626}
-    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); margin:0; color:#111}
-    .container{max-width:900px;margin:28px auto;padding:18px}
-    .card{background:var(--card);border-radius:10px;box-shadow:0 6px 18px rgba(15,23,42,0.06);padding:20px}
-    h1{margin:0 0 8px;font-size:22px}
-    p.lead{margin:0 0 12px;color:var(--muted)}
-    .meta{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--muted);margin-bottom:12px}
-    .question{font-weight:600;font-size:18px;margin-bottom:12px}
-    .options{display:grid;gap:10px}
-    .opt{border:1px solid #e6e9ee;padding:12px;border-radius:8px;background:#fff;cursor:pointer;text-align:left}
-    .opt:hover{background:#f3f4f6}
-    .opt.selected{outline:3px solid rgba(3,105,161,0.12);background:#eef2ff}
-    .opt.correct{background:#ecfdf5;border-color:rgba(16,185,129,0.2)}
-    .opt.wrong{background:#fff1f2;border-color:rgba(220,38,38,0.12)}
-    .controls{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
-    button{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
-    button.ghost{background:#f1f5f9;color:#111;border:1px solid #e6e9ee}
-    .small{font-size:13px;color:var(--muted)}
-    .results .score{font-size:20px;font-weight:700;margin-bottom:12px}
-    .qa-review{margin-top:12px}
-    .qa-item{padding:12px;border-radius:8px;border:1px solid #eef2f6;margin-bottom:10px;background:#fff}
-    .tag{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px}
-    .tag.correct{background:rgba(16,185,129,0.12);color:var(--success)}
-    .tag.wrong{background:rgba(220,38,38,0.06);color:var(--danger)}
-    footer{margin-top:18px;font-size:13px;color:var(--muted);text-align:center}
-    @media (max-width:640px){.container{padding:12px}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaffolding Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <div class="card" id="app">
-      <h1>Scaffolding Quiz — हिंदी</h1>
-      <p class="lead">हर बार प्रश्न और विकल्प शफल होंगे। हर क्विज़ में <strong>20</strong> सवाल होते हैं। क्विज़ के अंत में अंक दिखेंगे।</p>
-
-      <div id="quiz-area">
-        <!-- meta -->
-        <div class="meta">
-          <div id="progress">प्रश्न 0 / 20</div>
-          <div id="answered-count">0 उत्तर दिए गए</div>
-          <div style="flex:1"></div>
-          <div class="small">सब प्रश्न SGB/Harsco मैनुअल पर आधारित</div>
-        </div>
-
-        <!-- question card -->
-        <div id="question-card" class="card" style="padding:16px;margin-bottom:10px;background:#fff">
-          <div class="question" id="q-text">लोड हो रहा है...</div>
-          <div class="options" id="options"></div>
-
-          <div class="controls">
-            <div>
-              <button id="prevBtn" class="ghost" onclick="prevQ()">पिछला</button>
-              <button id="nextBtn" onclick="nextQ()">अगला</button>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- Registration Screen -->
+    <div id="registrationScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Scaffolding Quiz</h1>
+                <p class="text-gray-600 mt-2">Test your knowledge</p>
             </div>
-            <div>
-              <button id="endBtn" class="ghost" onclick="finishQuiz()">समाप्त करें</button>
-              <button onclick="restart()" style="background:#0ea5a4">नया क्विज़</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div id="results" style="display:none" class="results">
-        <div class="score" id="scoreText">आपका स्कोर: 0 / 20</div>
-        <div id="review" class="qa-review"></div>
-        <div style="margin-top:12px">
-          <button onclick="restart()">फिर से शुरू करें</button>
-        </div>
-      </div>
+            <form id="registrationForm" class="space-y-6">
 
-      <footer>GitHub Pages के लिए HTML — कोई बाहरी लाइब्रेरी नहीं।</footer>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                    <input type="text" id="candidateName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Enter your full name">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+                    <input type="tel" id="candidatePhone" required pattern="[0-9]{10}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Enter 10-digit mobile number">
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Start Quiz
+                </button>
+            </form>
+        </div>
     </div>
-  </div>
 
-<script>
-/*
-  ALL_QUESTIONS array: each item:
-  { id: number, q: "question text", options: ["A","B","C","D"], correct: index (0-based) }
-  The app will:
-   - shuffle questions
-   - take first 20
-   - for each question shuffle options and reassign correct index accordingly
-*/
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="hidden min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading questions...</p>
+        </div>
+    </div>
 
-const ALL_QUESTIONS = [
-/* 1-20 Basic */
-{ id:1, q:"स्टैंडर्ड (Standard) क्या है?", options:[
-  "एक क्षैतिज ट्यूब जो प्लेटफ़ॉर्म को सहारा देती है।",
-  "एक गार्डरेल जो गिरने से रोकती है।",
-  "एक ट्रांसम जो लेज़रों को जोड़ता है।",
-  "एक लंबवत ट्यूब जो स्कैफ़ोल्ड का भार जमीन तक ले जाती है।"
-], correct:3 },
-{ id:2, q:"लेज़र (Ledger) क्या है?", options:[
-  "एक ऊर्ध्वाधर ट्यूब जो भार लेती है।",
-  "एक ट्रांसम जो प्लेटफ़ॉर्म को सहारा देता है।",
-  "एक क्षैतिज ट्यूब जो संरचना के चेहरे के समानांतर होता है।",
-  "एक ब्रैस जो कोनों को मजबूती देता है।"
-], correct:2 },
-{ id:3, q:"ट्रांसम (Transom) क्या है?", options:[
-  "एक तिरछा ब्रैस।",
-  "एक गार्डरेल।",
-  "एक क्षैतिज ट्यूब जो लेज़रों पर फैली होती है और प्लेटफ़ॉर्म को सहारा देती है।",
-  "एक बेस प्लेट।"
-], correct:2 },
-{ id:4, q:"गार्डरेल (Guardrail) का उद्देश्य क्या है?", options:[
-  "भार को जमीन तक ले जाना।",
-  "प्लेटफ़ॉर्म से गिरने से रोकना।",
-  "ट्रांसम को जोड़ना।",
-  "टाई को सहारा देना।"
-], correct:1 },
-{ id:5, q:"ब्रैस (Brace) क्या करता है?", options:[
-  "प्लेटफ़ॉर्म को सहारा देता है।",
-  "गार्डरेल की तरह काम करता है।",
-  "स्थिरता के लिए क्षैतिज और लंबवत ट्यूबों को जोड़ता है।",
-  "भार को नींव तक पहुँचाता है।"
-], correct:2 },
-{ id:6, q:"फ़ैसेड (Façade) ब्रैस कहाँ लगाया जाता है?", options:[
-  "कोने पर।",
-  "संरचना के चेहरे के समानांतर।",
-  "ट्रांसम के नीचे।",
-  "बेस प्लेट पर।"
-], correct:1 },
-{ id:7, q:"लेज़र ब्रैस का उपयोग कहाँ होता है?", options:[
-  "कोनों पर।",
-  "क्षैतिज तल पर।",
-  "संरचना के समकोण पर।",
-  "केवल लोड क्लास-1 पर।"
-], correct:2 },
-{ id:8, q:"नी (Knee) ब्रैस का उपयोग किसलिए होता है?", options:[
-  "बोर्ड सपोर्ट के लिए।",
-  "कोनों को मजबूती देने के लिए।",
-  "गार्डरेल लगाने के लिए।",
-  "बेस प्लेट से जोड़ने के लिए।"
-], correct:1 },
-{ id:9, q:"प्लान (Plan) ब्रैस किस तल में लगाया जाता है?", options:[
-  "क्षैतिज तल में।",
-  "लंबवत तल में।",
-  "कोनों पर।",
-  "गार्डरेल के नीचे।"
-], correct:0 },
-{ id:10, q:"लाँगिट्यूडिनल ब्रैस कहाँ लगाया जाता है?", options:[
-  "कोनों में।",
-  "स्कैफ़ोल्ड के लंबे आयाम के तल में।",
-  "छोटे आयाम के तल में।",
-  "बेस जैक पर।"
-], correct:1 },
-{ id:11, q:"ट्रांसवर्स ब्रैस कहाँ लगाया जाता है?", options:[
-  "लोडिंग बे में।",
-  "स्कैफ़ोल्ड के छोटे आयाम के तल में।",
-  "ऊपरी लिफ्ट पर।",
-  "गार्डरेल पर।"
-], correct:1 },
-{ id:12, q:"सेक्शन ब्रैस का उपयोग किसलिए होता है?", options:[
-  "गार्डरेल सपोर्ट के लिए।",
-  "यूनिट बीम और श्योर बीम की स्थिरता के लिए।",
-  "सोल प्लेट को पकड़ने के लिए।",
-  "केवल नींव में।"
-], correct:1 },
-{ id:13, q:"रैकर (Raker) क्या है?", options:[
-  "क्षैतिज ब्रैस।",
-  "एक तिरछी भार-वहन ट्यूब।",
-  "गार्डरेल।",
-  "स्लीव कूपलर।"
-], correct:1 },
-{ id:14, q:"हैंगर (Hanger) किसे कहते हैं?", options:[
-  "गार्डरेल जो कोनों पर लगे।",
-  "एक लंबवत ट्यूब जो ऊपर की संरचना से लटकती है।",
-  "एक बेस प्लेट का प्रकार।",
-  "गार्डरेल ब्रैस।"
-], correct:1 },
-{ id:15, q:"पंचन (Puncheon) क्या है?", options:[
-  "गार्डरेल।",
-  "ट्रांसम।",
-  "एक लंबवत ट्यूब जिसे नीचे स्कैफ़ोल्ड से सहारा मिलता है।",
-  "एक बोर्ड ट्रांसम।"
-], correct:2 },
-{ id:16, q:"ट्रैपेज ट्यूब का उद्देश्य क्या है?", options:[
-  "गार्डरेल को जोड़ना।",
-  "हैंगर से लटकाकर स्लुंग स्कैफ़ोल्ड को बनाने में मदद करना।",
-  "नींव को मजबूती देना।",
-  "बेस जैक को ऊँचा करना।"
-], correct:1 },
-{ id:17, q:"सोल प्लेट का काम क्या है?", options:[
-  "गार्डरेल पकड़ना।",
-  "भार को जमीन या डेक पर वितरित करना।",
-  "ऊँचाई समायोजित करना।",
-  "ट्यूब जोड़ना।"
-], correct:1 },
-{ id:18, q:"बेस प्लेट क्या करती है?", options:[
-  "गार्डरेल सपोर्ट।",
-  "स्टैंडर्ड से भार को जमीन तक पहुँचाती है।",
-  "गार्डरेल जोड़ती है।",
-  "ट्रांसम को पकड़ती है।"
-], correct:1 },
-{ id:19, q:"बेस जैक का उपयोग क्या है?", options:[
-  "भार वितरण।",
-  "ऊँचाई समायोजित करना।",
-  "गार्डरेल पकड़ना।",
-  "टाई लगाना।"
-], correct:1 },
-{ id:20, q:"कूपलर (Coupler) क्या है?", options:[
-  "गार्डरेल।",
-  "ट्यूबों को जोड़ने वाला घटक।",
-  "नींव का हिस्सा।",
-  "बोर्ड का सहारा।"
-], correct:1 },
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="hidden min-h-screen p-4">
+        <div class="max-w-2xl mx-auto">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-600">Question <span id="currentQuestion">1</span> of 20</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 5%"></div>
+                </div>
+            </div>
 
-/* 21-40 Basic continued */
-{ id:21, q:"सप्लीमेंट्री कूपलर कब लगाया जाता है?", options:[
-  "जब बोर्डों की संख्या बढ़ानी हो।",
-  "केवल गार्डरेल के लिए।",
-  "जब मुख्य कूपलर पर भार उसकी SWL से अधिक हो।",
-  "जब बेस प्लेट को जोड़ना हो।"
-], correct:2 },
-{ id:22, q:"राइट-एंगल (Double) कूपलर का प्रयोग कहाँ होता है?", options:[
-  "केवल गार्डरेल पकड़ने के लिए।",
-  "पाइपों को 90° कोण पर जोड़ने के लिए।",
-  "प्लेटफ़ॉर्म बनाने के लिए।",
-  "नींव पकड़ने के लिए।"
-], correct:1 },
-{ id:23, q:"स्विवेल कूपलर का प्रयोग कब किया जाता है?", options:[
-  "केवल बेस प्लेट जोड़ने के लिए।",
-  "प्लेटफ़ॉर्म बोर्ड रखने के लिए।",
-  "पाइपों को किसी भी कोण पर जोड़ने के लिए।",
-  "केवल ऊर्ध्वाधर सपोर्ट में।"
-], correct:2 },
-{ id:24, q:"पटलॉग (Putlog) कूपलर किस प्रकार का होता है?", options:[
-  "भार-वहन कूपलर।",
-  "गैर-भार-वहन कूपलर।",
-  "केवल बेस जैक का हिस्सा।",
-  "नींव प्लेट।"
-], correct:1 },
-{ id:25, q:"स्लीव कूपलर किसके लिए प्रयोग होता है?", options:[
-  "गार्डरेल लगाने के लिए।",
-  "दो ट्यूबों को सह-अक्षीय जोड़ने के लिए।",
-  "ट्रांसम जोड़ने के लिए।",
-  "नींव पकड़ने के लिए।"
-], correct:1 },
-{ id:26, q:"चेक फिटिंग (Check Fitting) क्यों लगाई जाती है?", options:[
-  "गार्डरेल पकड़ने के लिए।",
-  "मुख्य कूपलर को भार की स्थिति में सुरक्षित करने के लिए।",
-  "प्लेटफ़ॉर्म को मजबूत करने के लिए।",
-  "बोर्ड सपोर्ट देने के लिए।"
-], correct:1 },
-{ id:27, q:"वर्किंग प्लेटफ़ॉर्म क्या होता है?", options:[
-  "एक गार्डरेल।",
-  "नींव की प्लेट।",
-  "वह डेक जिस पर काम किया जाता है।",
-  "ट्रांसम का हिस्सा।"
-], correct:2 },
-{ id:28, q:"लिफ्ट (Lift) किसे कहते हैं?", options:[
-  "गार्डरेल।",
-  "लेज़र और ट्रांसम का समूह जो क्षैतिज परत बनाता है।",
-  "नींव का हिस्सा।",
-  "केवल टाई।"
-], correct:1 },
-{ id:29, q:"लिफ्ट हाइट (Lift Height) क्या है?", options:[
-  "प्लेटफ़ॉर्म की चौड़ाई।",
-  "दो लिफ्ट के बीच की ऊर्ध्वाधर दूरी।",
-  "बोर्ड की मोटाई।",
-  "गार्डरेल की ऊँचाई।"
-], correct:1 },
-{ id:30, q:"स्कैफ़ोल्ड लोड क्लास-1 की यूनिफॉर्म लोड क्षमता कितनी है?", options:[
-  "3.00 kN/m²",
-  "1.50 kN/m²",
-  "0.75 kN/m²",
-  "2.00 kN/m²"
-], correct:2 },
-{ id:31, q:"स्कैफ़ोल्ड लोड क्लास-3 की यूनिफॉर्म लोड क्षमता कितनी है?", options:[
-  "0.75 kN/m²",
-  "3.00 kN/m²",
-  "1.50 kN/m²",
-  "2.00 kN/m²"
-], correct:3 },
-{ id:32, q:"स्कैफ़ोल्ड लोड क्लास-4 किस प्रकार का होता है?", options:[
-  "बहुत हल्का।",
-  "हल्का।",
-  "सामान्य।",
-  "भारी।"
-], correct:3 },
-{ id:33, q:"स्कैफ़ोल्ड में अधिकतम कितने अंदरूनी बोर्ड (inside boards) लगाए जा सकते हैं?", options:[
-  "4","3","2","1"
-], correct:2 },
-{ id:34, q:"अंदरूनी बोर्डों का SWL (Safe Working Load) कितना होता है?", options:[
-  "2.00 kN/m²","1.50 kN/m²","3.00 kN/m²","0.75 kN/m²"
-], correct:3 },
-{ id:35, q:"बोर्ड ट्रांसम का अधिकतम अंतराल (spacing) क्लास-1 से 3 में कितना हो सकता है?", options:[
-  "2.0 मीटर","1.5 मीटर","1.2 मीटर","0.9 मीटर"
-], correct:2 },
-{ id:36, q:"बोर्ड ट्रांसम का अधिकतम अंतराल क्लास-4 (भारी) में कितना होता है?", options:[
-  "1.2 मीटर","0.9 मीटर","0.6 मीटर","1.5 मीटर"
-], correct:1 },
-{ id:37, q:"मुख्य प्लेटफ़ॉर्म के अलावा सहायक प्लेटफ़ॉर्म कितनी क्षमता ले सकता है?", options:[
-  "100%","75%","50%","25%"
-], correct:2 },
-{ id:38, q:"डबल (राइट-एंगल) कूपलर का SWL Class B में कितना है?", options:[
-  "3.6 kN","5.5 kN","6.1 kN","9.1 kN"
-], correct:3 },
-{ id:39, q:"स्विवेल कूपलर का SWL Class A में कितना है?", options:[
-  "9.1 kN","3.6 kN","5.5 kN","6.1 kN"
-], correct:1 },
-{ id:40, q:"पटलॉग (हाफ) कूपलर का SWL कितना होता है?", options:[
-  "3.6 kN","1.1 kN","0.63 kN","2.0 kN"
-], correct:2 },
+            <!-- Question Card -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-4">
+                <h2 id="questionText" class="text-lg font-medium text-gray-800 mb-6 leading-relaxed"></h2>
+                
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- Options will be populated here -->
+                </div>
+            </div>
 
-/* 41-60 Intermediate part1 */
-{ id:41, q:"टाई को कहाँ लगाना चाहिए?", options:[
-  "केवल गार्डरेल पर।",
-  "केवल बेस प्लेट पर।",
-  "दोनों स्टैंडर्ड्स या लेज़रों पर, नोड पॉइंट से 300mm के भीतर।",
-  "केवल प्लेटफ़ॉर्म बोर्ड पर।"
-], correct:2 },
-{ id:42, q:"यदि Cuplok scaffold में केवल भीतरी स्टैंडर्ड पर टाई लगाया जा सके तो क्या करना चाहिए?", options:[
-  "Scaffold हटा देना चाहिए।",
-  "V-टाई का उपयोग करना चाहिए।",
-  "टाई बिल्कुल न लगाना।",
-  "केवल सिंगल कूपलर लगाना।"
-], correct:1 },
-{ id:43, q:"टाई किए गए बेज़ के बीच क्षैतिज अधिकतम दूरी कितनी हो सकती है?", options:[
-  "5.0 मीटर","7.5 मीटर","12.0 मीटर","3.0 मीटर"
-], correct:1 },
-{ id:44, q:"टाई किए गए बेज़ के बीच ऊर्ध्वाधर अधिकतम दूरी कितनी हो सकती है?", options:[
-  "7.5 मीटर","12.0 मीटर","15.0 मीटर","9.0 मीटर"
-], correct:1 },
-{ id:45, q:"Scaffold में टाई को कहाँ तक लगाना चाहिए?", options:[
-  "केवल पहले 3 लिफ्ट तक।",
-  "उच्चतम लिफ्ट तक।",
-  "केवल निचले स्तर तक।",
-  "केवल गार्डरेल तक।"
-], correct:1 },
-{ id:46, q:"Scaffold पर शीटिंग कब जोड़ी जा सकती है?", options:[
-  "जब भी जरूरत हो।",
-  "बिना किसी इंजीनियरिंग जांच के।",
-  "केवल डिजाइन ऑफिस की अनुमति से।",
-  "केवल गार्डरेल जोड़ने पर।"
-], correct:2 },
-{ id:47, q:"Scaffold कार्य के लिए किसका पालन आवश्यक है?", options:[
-  "केवल कंपनी के नियम।",
-  "संबद्ध मानक, कोड ऑफ प्रैक्टिस और निर्माता की स्पेसिफिकेशन।",
-  "केवल गार्डरेल नियम।",
-  "केवल ग्राहक की इच्छा।"
-], correct:1 },
-{ id:48, q:"Scaffold में अधिकतम कितने अंदरूनी बोर्ड लगाए जा सकते हैं?", options:[
-  "4","2","3","5"
-], correct:1 },
-{ id:49, q:"अंदरूनी बोर्ड किसके लिए होते हैं?", options:[
-  "मुख्य कार्य करने के लिए।",
-  "लोडिंग प्लेटफ़ॉर्म के लिए।",
-  "केवल पहुँच (access) के लिए।",
-  "गार्डरेल सपोर्ट के लिए।"
-], correct:2 },
-{ id:50, q:"लोड-बेयरिंग स्लीव कूपलर (Butt-sleeve) का SWL Class A कितना है?", options:[
-  "6.1 kN","12.2 kN","9.1 kN","3.6 kN"
-], correct:2 },
+            <!-- Navigation -->
+            <div class="flex justify-end">
+                <button id="nextBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
 
-/* 51-80 Intermediate part2 */
-{ id:51, q:"राइट-एंगल कूपलर का SWL Class A में कितना है?", options:[
-  "9.1 kN","6.1 kN","3.6 kN","12.2 kN"
-], correct:1 },
-{ id:52, q:"स्विवेल कूपलर का SWL Class B में कितना है?", options:[
-  "6.1 kN","3.6 kN","5.5 kN","2.0 kN"
-], correct:2 },
-{ id:53, q:"नॉन-लोड-बेयरिंग स्लीव कूपलर का SWL कितना है?", options:[
-  "9.1 kN","3.6 kN","0.63 kN","6.1 kN"
-], correct:1 },
-{ id:54, q:"नॉन-लोड-बेयरिंग पटलॉग कूपलर का SWL कितना है?", options:[
-  "3.6 kN","1.1 kN","0.63 kN","5.5 kN"
-], correct:2 },
-{ id:55, q:"ग्रैवलॉक (Gravlock) कूपलर का प्रयोग कैसे करना चाहिए?", options:[
-  "अकेले।","केवल ट्रांसम जोड़ने में।","हमेशा जोड़ी (पेयर) में।","केवल बोर्ड सपोर्ट में।"
-], correct:2 },
-{ id:56, q:"Scaffold संरचनाओं को किस सामग्रियों से मुख्यतः टाई किया जाता है?", options:[
-  "लकड़ी और बांस।","स्टील और कंक्रीट।","केवल प्लास्टिक।","एल्युमिनियम और रबर।"
-], correct:1 },
-{ id:57, q:"टाई लोड क्लास Light Duty की क्षमता कितनी है?", options:[
-  "6.1 kN","3.5 kN","12.2 kN","9.1 kN"
-], correct:1 },
-{ id:58, q:"टाई लोड क्लास Heavy Duty की क्षमता कितनी है?", options:[
-  "3.5 kN","12.2 kN","9.1 kN","6.1 kN"
-], correct:1 },
-{ id:59, q:"बॉक्स टाई का मुख्य उद्देश्य क्या है?", options:[
-  "केवल गार्डरेल जोड़ना।",
-  "अंदर और बाहर की गति दोनों को रोकना।",
-  "केवल नींव पकड़ना।",
-  "केवल प्लेटफ़ॉर्म बोर्ड सपोर्ट करना।"
-], correct:1 },
-{ id:60, q:"लिप टाई का भार-वहन कैसा होता है?", options:[
-  "बहुत अधिक, दो कूपलर जितना।",
-  "सीमित, केवल एक कूपलर जितना।",
-  "बिल्कुल भी भार नहीं लेता।",
-  "अनंत भार ले सकता है।"
-], correct:1 },
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center fade-in">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Quiz Completed!</h2>
+            <p class="text-gray-600 mb-6">Thank you for taking the quiz</p>
+            
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="text-3xl font-bold text-blue-600 mb-1" id="finalScore">0/20</div>
+                <div class="text-sm text-gray-600">Final Score</div>
+            </div>
 
-/* 61-80 continued */
-{ id:61, q:"थ्रू टाई (Through Tie) का उद्देश्य क्या है?", options:[
-  "केवल प्लेटफ़ॉर्म को पकड़ना।",
-  "केवल गार्डरेल जोड़ना।",
-  "स्कैफ़ोल्ड की अंदर-बाहर की गति रोकना।",
-  "बेस प्लेट को मजबूती देना।"
-], correct:2 },
-{ id:62, q:"यूनिट बीम को जोड़ने के लिए क्या इस्तेमाल होता है?", options:[
-  "रस्सी।",
-  "नट, बोल्ट और वॉशर।",
-  "वेल्डिंग।",
-  "लकड़ी की कीलें।"
-], correct:1 },
-{ id:63, q:"श्योर (लैडर) बीम को किस प्रकार नहीं जोड़ना चाहिए?", options:[
-  "वेल्डिंग से।",
-  "स्लीव कूपलर से।",
-  "नट और बोल्ट से।",
-  "वॉशर से।"
-], correct:1 },
-{ id:64, q:"यूनिट या श्योर बीम के प्रत्येक अंत को कितने स्टैंडर्ड/हैंगर से गुजरना चाहिए?", options:[
-  "एक से।",
-  "कम से कम दो से।",
-  "तीन से।",
-  "केवल एक गार्डरेल से।"
-], correct:1 },
-{ id:65, q:"यदि एक से अधिक यूनिट/श्योर बीम साथ-साथ हों, तो प्लान ब्रैस कितने पर लगाना चाहिए?", options:[
-  "हर 2 बीम पर।",
-  "हर 3 बीम पर।",
-  "हर 5 बीम पर।",
-  "हर 10 बीम पर।"
-], correct:2 },
-{ id:66, q:"बीम के हैंगर/पंचन को कैसे जोड़ा जाना चाहिए?", options:[
-  "केवल ऊपर की कॉर्ड से।",
-  "केवल नीचे की कॉर्ड से।",
-  "दोनों कॉर्ड से और चेक फिटिंग के साथ।",
-  "केवल एक स्लीव कूपलर से।"
-], correct:2 },
-{ id:67, q:"लिफ्टिंग फ्रेम में होइस्ट कहाँ लगाया जाना चाहिए?", options:[
-  "कहीं भी लगाया जा सकता है।",
-  "हमेशा लिफ्ट पॉइंट के ठीक ऊपर।",
-  "गार्डरेल पर।",
-  "ट्रांसम पर।"
-], correct:1 },
-{ id:68, q:"हवा की गति कितनी होने पर लिफ्टिंग ऑपरेशन रोक देना चाहिए?", options:[
-  "10 m/s","12 m/s","20 m/s","17 m/s"
-], correct:3 },
-{ id:69, q:"लिफ्टिंग फ्रेम का आधार कैसा होना चाहिए?", options:[
-  "केवल गार्डरेल पर टिका हो।",
-  "मजबूत और समतल, पास में कोई खुदाई न हो।",
-  "केवल लकड़ी पर रखा हो।",
-  "केवल ट्रांसम पर रखा हो।"
-], correct:1 },
-{ id:70, q:"सहायक उपकरण (Auxiliary equipment) जैसे शटरिंग और टिम्बर का जिम्मा किसका है?", options:[
-  "स्कैफ़ोल्ड सप्लायर का।",
-  "ग्राहक का।",
-  "केवल सुपरवाइज़र का।",
-  "केवल स्कैफ़ोल्डर का।"
-], correct:1 },
+            <button onclick="location.reload()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                Take Quiz Again
+            </button>
+        </div>
+    </div>
 
-/* 71-100 Advanced */
-{ id:71, q:"एल्युमिनियम बीम में किस प्रकार की फिटिंग्स प्रयोग करनी चाहिए?", options:[
-  "लकड़ी की।",
-  "स्टील हाफ-लैप।",
-  "भार-वहन ड्रॉप-फोर्ज्ड कूपलर।",
-  "रस्सी से बांधना।"
-], correct:2 },
-{ id:72, q:"स्कैफ़ोल्ड बोर्ड (38mm मोटाई) का वजन कितना होता है?", options:[
-  "4 kg/m","6 kg/m","10 kg/m","12 kg/m"
-], correct:1 },
-{ id:73, q:"स्कैफ़ोल्ड बोर्ड (50mm मोटाई) का वजन कितना होता है?", options:[
-  "6 kg/m","8 kg/m","10 kg/m","12 kg/m"
-], correct:1 },
-{ id:74, q:"स्कैफ़ोल्ड बोर्ड (63mm मोटाई) का वजन कितना होता है?", options:[
-  "6 kg/m","8 kg/m","10 kg/m","12 kg/m"
-], correct:2 },
-{ id:75, q:"टाइप-4 स्टील ट्यूब का वजन कितना है?", options:[
-  "3.56 kg/m","4.37 kg/m","6.00 kg/m","2.50 kg/m"
-], correct:1 },
-{ id:76, q:"टाइप-3 स्टील ट्यूब का वजन कितना है?", options:[
-  "2.80 kg/m","3.56 kg/m","4.37 kg/m","5.00 kg/m"
-], correct:1 },
-{ id:77, q:"400mm गहराई वाले एल्युमिनियम बीम का वजन कितना है?", options:[
-  "3.0 kg/m","4.5 kg/m","5.5 kg/m","6.5 kg/m"
-], correct:1 },
-{ id:78, q:"यूनिट बीम (स्टील) का वजन कितना है?", options:[
-  "10.5 kg/m","12.32 kg/m","14.0 kg/m","15.5 kg/m"
-], correct:1 },
-{ id:79, q:"श्योर (लैडर) बीम का वजन कितना है?", options:[
-  "10.5 kg/m","12.32 kg/m","12.73 kg/m","15.5 kg/m"
-], correct:2 },
-{ id:80, q:"सप्लीमेंट्री कूपलर का प्रयोग कब करना चाहिए?", options:[
-  "जब गार्डरेल जोड़ना हो।",
-  "जब केवल पटलॉग कूपलर लगाना हो।",
-  "जब मुख्य कूपलर पर भार उसकी SWL से अधिक हो।",
-  "जब बेस जैक लगाना हो।"
-], correct:2 },
+    <script>
+        // App State
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let userAnswers = [];
+        let candidateInfo = {};
 
-{ id:81, q:"Scaffold के लिए नींव (foundation) कैसी होनी चाहिए?", options:[
-  "केवल मिट्टी पर रखी जाए।",
-  "रेत पर बिना प्लेट के रखी जाए।",
-  "इतनी मजबूत कि अतिरिक्त भार सह सके।",
-  "केवल पानी पर तैराई जाए।"
-], correct:2 },
-{ id:82, q:"1 टन को kN में बदलने का गुणक कितना है?", options:[
-  "5.00","7.50","9.81","3.50"
-], correct:2 },
-{ id:83, q:"100 kg/m² कितने kN/m² के बराबर होता है?", options:[
-  "0.50 kN/m²","0.981 kN/m²","2.00 kN/m²","1.50 kN/m²"
-], correct:1 },
-{ id:84, q:"225x38mm लैमिनेटेड स्कैफ़ोल्ड बोर्ड का वजन कितना है?", options:[
-  "20 kg/m²","27 kg/m²","35 kg/m²","15 kg/m²"
-], correct:1 },
-{ id:85, q:"डबल (राइट-एंगल) कूपलर (50x50) का वजन कितना है?", options:[
-  "1.26 kg","0.96 kg","1.10 kg","0.60 kg"
-], correct:1 },
-{ id:86, q:"स्विवेल कूपलर (50x50) का वजन कितना है?", options:[
-  "0.96 kg","1.26 kg","1.50 kg","0.80 kg"
-], correct:1 },
-{ id:87, q:"नॉन-लोड-बेयरिंग स्लीव कूपलर का वजन कितना है?", options:[
-  "0.63 kg","0.80 kg","1.1 kg","1.5 kg"
-], correct:2 },
-{ id:88, q:"पटलॉग (हाफ) कूपलर का वजन कितना है?", options:[
-  "1.1 kg","0.80 kg","0.6 kg","1.25 kg"
-], correct:2 },
-{ id:89, q:"गिरडर क्लैम्प का वजन कितना होता है?", options:[
-  "0.6 kg","1.25 kg","1.1 kg","2.0 kg"
-], correct:1 },
-{ id:90, q:"SWL (Safe Working Load) का क्या अर्थ है?", options:[
-  "अधिकतम भार जो ट्यूब तोड़े।",
-  "केवल गार्डरेल की क्षमता।",
-  "घटक द्वारा सुरक्षित रूप से सहा जाने वाला अधिकतम भार।",
-  "नींव की मोटाई।"
-], correct:2 },
 
-{ id:91, q:"Scaffold डिज़ाइन किस मानक के अनुसार होना चाहिए?", options:[
-  "BS 8110",
-  "BS EN 12811 और TG20",
-  "IS 456",
-  "OSHA 2000"
-], correct:1 },
-{ id:92, q:"टाइप-4 स्टील ट्यूब और टाइप-3 स्टील ट्यूब में अंतर क्या है?", options:[
-  "टाइप-3 मोटी और भारी होती है।",
-  "टाइप-4 मोटी (4.0mm, 4.37kg/m) और टाइप-3 पतली (3.2mm, 3.56kg/m) होती है।",
-  "दोनों का वजन समान होता है।",
-  "टाइप-3 केवल गार्डरेल में लगती है।"
-], correct:1 },
-{ id:93, q:"Scaffold टाई और एंकर के लिए किन सामग्रियों को प्राथमिकता दी जाती है?", options:[
-  "प्लास्टिक और लकड़ी।",
-  "स्टील और कंक्रीट।",
-  "एल्युमिनियम और रस्सी।",
-  "केवल बांस।"
-], correct:1 },
-{ id:94, q:"एल्युमिनियम बीम में हाफ-लैप क्यों नहीं किया जाता?", options:[
-  "क्योंकि हल्का होता है।",
-  "क्योंकि ज्यादा लंबा होता है।",
-  "क्योंकि केवल ड्रॉप-फोर्ज्ड फिटिंग्स ही प्रयोग होनी चाहिए।",
-  "क्योंकि यह सस्ता होता है।"
-], correct:2 },
-{ id:95, q:"नॉन-लोड-बेयरिंग स्लीव कूपलर का SWL कितना है?", options:[
-  "6.1 kN","3.6 kN","9.1 kN","0.63 kN"
-], correct:1 },
-{ id:96, q:"ड्रॉप-फोर्ज्ड कूपलर का महत्व क्या है?", options:[
-  "हल्का होता है।",
-  "यह मजबूत होता है और उच्च भार सह सकता है।",
-  "केवल सजावट के लिए।",
-  "यह नींव पकड़ता है।"
-], correct:1 },
-{ id:97, q:"यदि डिजाइन से अलग बदलाव करना हो तो क्या करना चाहिए?", options:[
-  "सीधे काम शुरू कर दें।",
-  "Harsco Infrastructure डिज़ाइन टीम से मंजूरी लें।",
-  "सुपरवाइज़र से मौखिक अनुमति लें।",
-  "गार्डरेल हटाकर बदल दें।"
-], correct:1 },
-{ id:98, q:"टन को किलो और kN में बदलने का तरीका क्या है?", options:[
-  "1 टन = 500 kg, 1 kg = 0.005 kN",
-  "1 टन = 1000 kg, 1 kg = 0.00981 kN",
-  "1 टन = 2000 kg, 1 kg = 0.02 kN",
-  "1 टन = 750 kg, 1 kg = 0.0075 kN"
-], correct:1 },
-{ id:99, q:"100 kg/m² को kN/m² में बदलने पर क्या मान आएगा?", options:[
-  "1.5 kN/m²","0.981 kN/m²","2.0 kN/m²","0.75 kN/m²"
-], correct:1 },
-{ id:100, q:"हल्के कार्यों (जैसे पेंटिंग/निरीक्षण) के लिए कौन-सी लोड क्लास उपयुक्त है?", options:[
-  "क्लास-4 (भारी)","क्लास-3 (सामान्य)","क्लास-1 और क्लास-2","क्लास-5"
-], correct:2 },
 
-/* 101-120 Extra */
-{ id:101, q:"Scaffold की नींव कैसी होनी चाहिए?", options:[
-  "केवल लकड़ी पर रखी जाए।",
-  "केवल मिट्टी पर रखी जाए।",
-  "इतनी मजबूत कि अतिरिक्त भार सह सके।",
-  "पानी पर रखी जाए।"
-], correct:2 },
-{ id:102, q:"1 टन कितने kN के बराबर होता है?", options:[
-  "5.00 kN","9.81 kN","7.50 kN","12.0 kN"
-], correct:1 },
-{ id:103, q:"1 किग्रा भार कितने kN के बराबर होता है?", options:[
-  "0.005 kN","0.007 kN","0.00981 kN","0.02 kN"
-], correct:2 },
-{ id:104, q:"डबल (राइट-एंगल) कूपलर का वजन कितना है?", options:[
-  "1.26 kg","1.10 kg","0.96 kg","0.60 kg"
-], correct:2 },
-{ id:105, q:"स्विवेल कूपलर (50x50) का वजन कितना है?", options:[
-  "0.96 kg","1.26 kg","1.50 kg","0.60 kg"
-], correct:1 },
-{ id:106, q:"स्लीव कूपलर का वजन कितना है?", options:[
-  "0.60 kg","1.25 kg","1.1 kg","0.96 kg"
-], correct:2 },
-{ id:107, q:"पटलॉग (हाफ) कूपलर का वजन कितना है?", options:[
-  "1.1 kg","0.6 kg","0.8 kg","1.5 kg"
-], correct:1 },
-{ id:108, q:"गिरडर क्लैम्प का वजन कितना है?", options:[
-  "0.6 kg","1.25 kg","1.1 kg","1.5 kg"
-], correct:1 },
-{ id:109, q:"लैमिनेटेड बोर्ड (225x38mm) का वजन कितना है?", options:[
-  "20 kg/m²","30 kg/m²","27 kg/m²","35 kg/m²"
-], correct:2 },
-{ id:110, q:"SWL (Safe Working Load) का क्या अर्थ है?", options:[
-  "न्यूनतम भार क्षमता।",
-  "अधिकतम भार जिसे घटक सुरक्षित रूप से सह सके।",
-  "गार्डरेल की ऊँचाई।",
-  "नींव की मोटाई।"
-], correct:1 },
-{ id:111, q:"टाई-एंकर का SWL कैसा होना चाहिए?", options:[
-  "हमेशा कम होना चाहिए।",
-  "काम के भार के बराबर या अधिक होना चाहिए।",
-  "गार्डरेल जितना होना चाहिए।",
-  "1 kN से कम होना चाहिए।"
-], correct:1 },
-{ id:112, q:"Scaffold टाई के लिए सबसे आम सामग्री कौन-सी है?", options:[
-  "लकड़ी और रस्सी।",
-  "एल्युमिनियम और बांस।",
-  "स्टील और कंक्रीट।",
-  "प्लास्टिक और टाइल।"
-], correct:2 },
-{ id:113, q:"Light Duty टाई की लोड क्षमता कितनी है?", options:[
-  "6.1 kN","3.5 kN","12.2 kN","9.1 kN"
-], correct:1 },
-{ id:114, q:"Standard Duty टाई की लोड क्षमता कितनी है?", options:[
-  "3.5 kN","6.1 kN","9.1 kN","12.2 kN"
-], correct:1 },
-{ id:115, q:"Heavy Duty टाई की लोड क्षमता कितनी है?", options:[
-  "3.5 kN","6.1 kN","12.2 kN","15.0 kN"
-], correct:2 },
-{ id:116, q:"Scaffold टाई-पैटर्न किसके लिए उपयुक्त है?", options:[
-  "सभी संरचनाओं पर।",
-  "केवल tube & fitting unsheeted basic scaffolds पर।",
-  "केवल लकड़ी के स्कैफ़ोल्ड पर।",
-  "केवल बांस के स्कैफ़ोल्ड पर।"
-], correct:1 },
-{ id:117, q:"टाई नोड पॉइंट से कितनी दूरी के भीतर लगाई जानी चाहिए?", options:[
-  "500mm","300mm","200mm","100mm"
-], correct:1 },
-{ id:118, q:"Scaffold निर्माण में किन दस्तावेज़ों का पालन करना चाहिए?", options:[
-  "केवल कंपनी की गाइडलाइन।",
-  "BS EN 12811, TG20, और निर्माता की स्पेसिफिकेशन।",
-  "केवल सुपरवाइज़र की सलाह।",
-  "केवल ग्राहक की मांग।"
-], correct:1 },
-{ id:119, q:"मुख्य प्लेटफ़ॉर्म के अलावा सहायक प्लेटफ़ॉर्म कितनी क्षमता ले सकता है?", options:[
-  "100%","50%","25%","75%"
-], correct:1 },
-{ id:120, q:"अंदरूनी बोर्ड की अधिकतम लोड क्लास क्या है?", options:[
-  "Class 2 (1.5 kN/m²)","Class 1 (0.75 kN/m²)","Class 3 (2.0 kN/m²)","Class 4 (3.0 kN/m²)"
-], correct:1 }
-]; // end ALL_QUESTIONS
+        // Fetch questions from Google Sheets
+        async function fetchQuestions() {
+            try {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbwXQEl036KLudzHF_2QW1pw_ro0_DwPmCl-8xalXpmTStERK73cx6yt0kNMPj-ZMx-k/exec?action=getQuestions');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to fetch questions');
+                }
+                
+                // Convert to expected format
+                let fetchedQuestions = data.questions.map(q => ({
+                    question: q.question,
+                    options: [q.optionA, q.optionB, q.optionC, q.optionD],
+                    correct: q.correct
+                }));
+                
+                // Shuffle and limit to 20 questions
+                questions = fetchedQuestions.sort(() => Math.random() - 0.5).slice(0, 20);
+                
+                return questions;
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+                alert('Error loading questions. Please check your internet connection and try again.');
+                return [];
+            }
+        }
 
-// ---------- Utility functions ----------
-function shuffleArray(a){
-  const arr = a.slice();
-  for(let i=arr.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
-  }
-  return arr;
-}
+        // Save quiz results to Google Sheets
+        async function saveQuizResult(score) {
+            try {
+                console.log('Sending data to Google Sheets:', {
+                    name: candidateInfo.name,
+                    contact: candidateInfo.phone,
+                    marks: score
+                });
+                
+                const response = await fetch('https://script.google.com/macros/s/AKfycbwXQEl036KLudzHF_2QW1pw_ro0_DwPmCl-8xalXpmTStERK73cx6yt0kNMPj-ZMx-k/exec', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'saveResult',
+                        name: candidateInfo.name,
+                        contact: candidateInfo.phone,
+                        marks: score
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Response data:', result);
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to save result');
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('Error saving result:', error);
+                throw error;
+            }
+        }
 
-// prepare 20-question quiz with shuffled options per question
-function prepareQuiz(){
-  const shuffledQuestions = shuffleArray(ALL_QUESTIONS);
-  const selected = shuffledQuestions.slice(0,20).map(q=>{
-    // create copy
-    const opts = q.options.map((o,i)=>({text:o, origIndex:i}));
-    const shuffledOpts = shuffleArray(opts);
-    // find new correct index
-    const newCorrect = shuffledOpts.findIndex(o=>o.origIndex===q.correct);
-    return {
-      id: q.id,
-      q: q.q,
-      options: shuffledOpts.map(o=>o.text),
-      correct: newCorrect
-    };
-  });
-  return selected;
-}
 
-// ---------- App state ----------
-let quiz = [];
-let currentIndex = 0;
-let answers = Array(20).fill(null); // store selected index or null
 
-// DOM refs
-const progressEl = document.getElementById('progress');
-const answeredEl = document.getElementById('answered-count');
-const qTextEl = document.getElementById('q-text');
-const optionsEl = document.getElementById('options');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const endBtn = document.getElementById('endBtn');
-const resultsEl = document.getElementById('results');
-const quizArea = document.getElementById('quiz-area');
-const scoreText = document.getElementById('scoreText');
-const reviewEl = document.getElementById('review');
+        // Display question
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            
+            const progressPercent = ((currentQuestionIndex + 1) / 20) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionLetter = String.fromCharCode(65 + index); // A, B, C, D
+                const isSelected = userAnswers[currentQuestionIndex] === optionLetter;
+                
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                    isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
+                }`;
+                optionDiv.innerHTML = `
+                    <label class="flex items-center cursor-pointer">
+                        <input type="radio" name="answer" value="${optionLetter}" class="sr-only" ${isSelected ? 'checked' : ''}>
+                        <div class="w-5 h-5 border-2 rounded-full mr-3 flex items-center justify-center ${
+                            isSelected ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
+                        }">
+                            ${isSelected ? '<div class="w-2 h-2 bg-white rounded-full"></div>' : ''}
+                        </div>
+                        <span class="text-gray-800">${optionLetter}. ${option}</span>
+                    </label>
+                `;
+                
+                optionDiv.addEventListener('click', () => {
+                    userAnswers[currentQuestionIndex] = optionLetter;
+                    displayQuestion(); // Refresh to show selection
+                });
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Update navigation button
+            document.getElementById('nextBtn').textContent = 
+                currentQuestionIndex === 19 ? 'Submit Quiz' : 'Next';
+        }
 
-function startNewQuiz(){
-  quiz = prepareQuiz();
-  currentIndex = 0;
-  answers = Array(quiz.length).fill(null);
-  resultsEl.style.display = 'none';
-  quizArea.style.display = 'block';
-  renderQuestion();
-  updateMeta();
-}
+        // Submit quiz and calculate results
+        async function submitQuiz() {
+            try {
+                let score = 0;
+                questions.forEach((question, index) => {
+                    if (userAnswers[index] === question.correct) {
+                        score++;
+                    }
+                });
+                
+                // Save results to Google Sheets
+                console.log('Saving quiz result...');
+                await saveQuizResult(score);
+                console.log('Quiz result saved successfully');
+                
+                // Show results
+                document.getElementById('finalScore').textContent = `${score}/20`;
+                showScreen('resultsScreen');
+                
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+                alert('There was an error submitting your quiz. Your score is calculated but may not be saved.');
+                
+                // Still show results even if saving failed
+                let score = 0;
+                questions.forEach((question, index) => {
+                    if (userAnswers[index] === question.correct) {
+                        score++;
+                    }
+                });
+                document.getElementById('finalScore').textContent = `${score}/20`;
+                showScreen('resultsScreen');
+            }
+        }
 
-function updateMeta(){
-  progressEl.textContent = `प्रश्न ${currentIndex+1} / ${quiz.length}`;
-  const answeredCount = answers.filter(a=>a!==null).length;
-  answeredEl.textContent = `${answeredCount} उत्तर दिए गए`;
-}
+        // Show specific screen
+        function showScreen(screenId) {
+            const screens = ['registrationScreen', 'loadingScreen', 'quizScreen', 'resultsScreen'];
+            screens.forEach(screen => {
+                document.getElementById(screen).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
 
-function renderQuestion(){
-  const q = quiz[currentIndex];
-  qTextEl.textContent = `Q${currentIndex+1}. ${q.q}`;
-  optionsEl.innerHTML = '';
-  q.options.forEach((opt, idx)=>{
-    const btn = document.createElement('div');
-    btn.className = 'opt';
-    btn.tabIndex = 0;
-    btn.dataset.idx = idx;
-    btn.innerHTML = `<strong style="margin-right:8px">${String.fromCharCode(65+idx)}.</strong> ${opt}`;
-    // mark selected
-    if(answers[currentIndex] !== null){
-      if(answers[currentIndex] === idx) btn.classList.add('selected');
-      // reveal correctness (show color)
-      if(idx === q.correct) btn.classList.add('correct');
-      else if(answers[currentIndex] === idx && answers[currentIndex] !== q.correct) btn.classList.add('wrong');
-    }
-    btn.addEventListener('click', ()=> selectOption(idx));
-    optionsEl.appendChild(btn);
-  });
-  // prev/next buttons enable/disable
-  prevBtn.disabled = currentIndex===0;
-  nextBtn.disabled = false;
-  updateMeta();
-}
+        // Event Listeners
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            candidateInfo = {
+                name: document.getElementById('candidateName').value,
+                phone: document.getElementById('candidatePhone').value
+            };
+            
+            showScreen('loadingScreen');
+            
+            try {
+                await fetchQuestions();
+                if (questions.length === 0) {
+                    throw new Error('No questions loaded');
+                }
+                userAnswers = new Array(20).fill(null);
+                showScreen('quizScreen');
+                displayQuestion();
+            } catch (error) {
+                alert('Failed to load quiz. Please try again.');
+                showScreen('registrationScreen');
+            }
+        });
 
-function selectOption(idx){
-  // don't allow change after answered (keeps simple). If you want to allow change, remove check.
-  if(answers[currentIndex] !== null) return;
-  answers[currentIndex] = idx;
-  renderQuestion();
-  updateMeta();
-}
+        document.getElementById('nextBtn').addEventListener('click', async () => {
+            if (currentQuestionIndex < 19) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                if (confirm('Are you sure you want to submit the quiz?')) {
+                    // Show loading state
+                    document.getElementById('nextBtn').textContent = 'Submitting...';
+                    document.getElementById('nextBtn').disabled = true;
+                    
+                    await submitQuiz();
+                }
+            }
+        });
 
-function prevQ(){
-  if(currentIndex>0){
-    currentIndex--;
-    renderQuestion();
-  }
-}
 
-function nextQ(){
-  if(currentIndex < quiz.length-1){
-    currentIndex++;
-    renderQuestion();
-  } else {
-    finishQuiz();
-  }
-}
-
-function calculateScore(){
-  let s = 0;
-  quiz.forEach((q,i)=>{ if(answers[i]===q.correct) s++; });
-  return s;
-}
-
-function finishQuiz(){
-  // require at least one answered? No — show results regardless.
-  const score = calculateScore();
-  scoreText.textContent = `आपका स्कोर: ${score} / ${quiz.length}`;
-  // build review
-  reviewEl.innerHTML = '';
-  quiz.forEach((q,i)=>{
-    const user = answers[i];
-    const userText = (user===null) ? '(कोई उत्तर नहीं)' : q.options[user];
-    const correctText = q.options[q.correct];
-    const item = document.createElement('div');
-    item.className = 'qa-item';
-    item.innerHTML = `<div style="font-weight:700">${i+1}. ${q.q}</div>
-      <div style="margin-top:8px"><span class="tag ${user===q.correct ? 'correct' : 'wrong'}">${user===q.correct ? 'सही' : 'गलत'}</span>
-       <div style="margin-top:8px"><strong>आपका उत्तर:</strong> ${userText}</div>
-       <div style="margin-top:4px"><strong>सही उत्तर:</strong> ${correctText}</div>
-      </div>`;
-    reviewEl.appendChild(item);
-  });
-
-  quizArea.style.display = 'none';
-  resultsEl.style.display = 'block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-// restart
-function restart(){
-  startNewQuiz();
-}
-
-// init
-startNewQuiz();
-
-</script>
-</body>
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97abb0d15496913b',t:'MTc1NzEzNzg0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
