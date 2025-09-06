@@ -149,14 +149,26 @@
         // Save quiz results to Google Sheets
         async function saveQuizResult(score) {
             try {
+                const currentDate = new Date().toLocaleDateString('en-IN');
+                
                 console.log('Sending data to Google Sheets:', {
+                    date: currentDate,
                     name: candidateInfo.name,
-                    contact: candidateInfo.phone,
+                    contactNo: candidateInfo.phone,
                     marks: score
                 });
                 
-                // Use GET method with URL parameters (most reliable for Google Apps Script)
-                const getUrl = `https://script.google.com/macros/s/AKfycbwXQEl036KLudzHF_2QW1pw_ro0_DwPmCl-8xalXpmTStERK73cx6yt0kNMPj-ZMx-k/exec?action=saveResult&name=${encodeURIComponent(candidateInfo.name)}&contact=${encodeURIComponent(candidateInfo.phone)}&marks=${score}`;
+                // Try multiple parameter formats to ensure compatibility
+                const params = new URLSearchParams({
+                    action: 'saveResult',
+                    date: currentDate,
+                    name: candidateInfo.name,
+                    contactNo: candidateInfo.phone,
+                    contact: candidateInfo.phone, // backup parameter name
+                    marks: score
+                });
+                
+                const getUrl = `https://script.google.com/macros/s/AKfycbwXQEl036KLudzHF_2QW1pw_ro0_DwPmCl-8xalXpmTStERK73cx6yt0kNMPj-ZMx-k/exec?${params.toString()}`;
                 
                 console.log('Making GET request to:', getUrl);
                 
@@ -320,5 +332,5 @@
 
 
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97abbc04c347cd03',t:'MTc1NzEzODMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97abc2cad595cd03',t:'MTc1NzEzODU4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
